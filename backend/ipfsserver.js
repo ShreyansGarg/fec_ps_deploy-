@@ -11,7 +11,18 @@ const app = express();
 const port = process.env.PORT || 4000; // I used the port 4000
 
 // Set up CORS
-app.use(cors());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'); // Set the allowed origin
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Set the allowed HTTP methods
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Set the allowed headers
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(204).send();
+  }
+
+  next();
+});
 
 // Set up multer for file uploads
 const storage = multer.memoryStorage();
